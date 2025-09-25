@@ -1,53 +1,55 @@
 # Main Terraform configuration file
 # Define your infrastructure resources here
 
+# Local values for dynamic resource generation and consistent tagging
+locals {
+  common_tags = {
+    Creator = var.creator_email
+  }
+
+  # Generate resource names dynamically using locals
+  resource_names = {
+    resource_group  = var.resource_group_name
+    storage_account = var.storage_account_name
+    virtual_network = var.vnet_name
+  }
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
+  name     = local.resource_names.resource_group
   location = var.location
 
-  tags = {
-    Creator = "mikita_andreichykau@epam.com"
-  }
+  tags = local.common_tags
 }
 
 # Storage Account
 resource "azurerm_storage_account" "main" {
-  name                     = var.storage_account_name
+  name                     = local.resource_names.storage_account
   resource_group_name      = azurerm_resource_group.main.name
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-  tags = {
-    Creator = "mikita_andreichykau@epam.com"
-  }
+  tags = local.common_tags
 }
 
 # Virtual Network
 resource "azurerm_virtual_network" "main" {
-  name                = var.vnet_name
-  address_space       = ["10.0.0.0/16"]
+  name                = local.resource_names.virtual_network
+  address_space       = var.vnet_address_space
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
 
-  tags = {
-    Creator = "mikita_andreichykau@epam.com"
-  }
+  tags = local.common_tags
 }
 
-# Frontend Subnet
-resource "azurerm_subnet" "frontend" {
-  name                 = "frontend"
-  resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
+# Subnets - dynamically created from variables
+resource "azurerm_subnet" "subnets" {
+  for_each = toset(var.subnet_names)
 
-# Backend Subnet
-resource "azurerm_subnet" "backend" {
-  name                 = "backend"
+  name                 = each.value
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = [var.subnet_address_prefixes[each.value]]
 }

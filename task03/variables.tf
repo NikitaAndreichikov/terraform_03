@@ -3,23 +3,39 @@
 variable "location" {
   description = "Azure region where resources will be created"
   type        = string
-  default     = "East US"
 }
 
 variable "resource_group_name" {
   description = "Name of the Azure Resource Group"
   type        = string
-  default     = "cmaz-6nj0d7cf-mod3-rg"
 }
 
 variable "storage_account_name" {
   description = "Name of the Azure Storage Account"
   type        = string
-  default     = "cmaz6nj0d7cfsa"
 }
 
 variable "vnet_name" {
   description = "Name of the Azure Virtual Network"
   type        = string
-  default     = "cmaz-6nj0d7cf-mod3-vnet"
+}
+
+variable "creator_email" {
+  description = "Email of the creator for resource tagging"
+  type        = string
+}
+
+variable "subnet_names" {
+  description = "List of subnet names to create"
+  type        = list(string)
+}
+
+variable "vnet_address_space" {
+  description = "Address space for the virtual network"
+  type        = list(string)
+}
+
+variable "subnet_address_prefixes" {
+  description = "Map of subnet names to their address prefixes"
+  type        = map(string)
 }

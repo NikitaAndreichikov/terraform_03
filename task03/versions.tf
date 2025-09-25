@@ -2,15 +2,14 @@
 # Best practice: Use specific version ranges to ensure compatibility and predictable behavior
 
 terraform {
-  # Require Terraform version 1.0 or higher for stable features
-  required_version = ">= 1.0"
+  # Require Terraform version 1.5.7 or higher for stable features
+  required_version = ">= 1.5.7"
 
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      # Use pessimistic constraint to allow patch updates but prevent breaking changes
-      # This allows 3.x.x versions but prevents 4.x.x which may introduce breaking changes
-      version = "~> 3.116"
+      # Use version constraint to allow versions >= 3.110.0 but prevent 4.x.x breaking changes
+      version = ">= 3.110.0, < 4.0.0"
     }
 
     random = {
