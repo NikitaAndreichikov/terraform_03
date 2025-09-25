@@ -1,6 +1,3 @@
-# Output values from your Terraform configuration
-# These values will be displayed after terraform apply
-
 output "rg_id" {
   description = "Resource Group ID"
   value       = azurerm_resource_group.main.id
