@@ -44,27 +44,12 @@ resource "azurerm_virtual_network" "main" {
   tags = local.common_tags
 }
 
-# Subnets - dynamically created from variables (COMMENTED OUT - using for_each)
-# resource "azurerm_subnet" "subnets" {
-#   for_each = toset(var.subnet_names)
-#
-#   name                 = each.value
-#   resource_group_name  = azurerm_resource_group.main.name
-#   virtual_network_name = azurerm_virtual_network.main.name
-#   address_prefixes     = [var.subnet_address_prefixes[each.value]]
-# }
+# Subnets - dynamically created using for_each
+resource "azurerm_subnet" "subnets" {
+  for_each = toset(var.subnet_names)
 
-# Subnets - created with simple string parameters
-resource "azurerm_subnet" "frontend" {
-  name                 = var.frontend_subnet_name
+  name                 = each.value
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.frontend_subnet_address_prefix]
-}
-
-resource "azurerm_subnet" "backend" {
-  name                 = var.backend_subnet_name
-  resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.backend_subnet_address_prefix]
+  address_prefixes     = [var.subnet_address_prefixes[each.value]]
 }
