@@ -13,6 +13,11 @@ locals {
     storage_account = var.storage_account_name
     virtual_network = var.vnet_name
   }
+
+  # Generate subnet names dynamically to avoid hardcoded values
+  subnet_names = {
+    for subnet in var.subnet_names : subnet => subnet
+  }
 }
 
 # Resource Group
@@ -46,10 +51,10 @@ resource "azurerm_virtual_network" "main" {
 
 # Subnets - dynamically created from variables
 resource "azurerm_subnet" "subnets" {
-  for_each = toset(var.subnet_names)
+  for_each = local.subnet_names
 
   name                 = each.value
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = [var.subnet_address_prefixes[each.value]]
+  address_prefixes     = [var.subnet_address_prefixes[each.key]]
 }
