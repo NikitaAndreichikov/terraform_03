@@ -11,10 +11,10 @@ creator_email        = "mikita_andreichykau@epam.com"
 #   backend  = "10.0.2.0/24"
 # }
 
-vnet_address_space   = ["10.0.0.0/16"]
+vnet_address_space = ["10.0.0.0/16"]
 
 # Simple string values for individual subnet resources
-frontend_subnet_name            = "frontend"
-frontend_subnet_address_prefix  = "10.0.1.0/24"
-backend_subnet_name             = "backend"
-backend_subnet_address_prefix   = "10.0.2.0/24"
+frontend_subnet_name           = "frontend"
+frontend_subnet_address_prefix = "10.0.1.0/24"
+backend_subnet_name            = "backend"
+backend_subnet_address_prefix  = "10.0.2.0/24"
